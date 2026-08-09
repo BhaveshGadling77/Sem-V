@@ -1,0 +1,7 @@
+a.out
+file.txt
+out.txt
+requirement-For-Shell-Stage2.txt
+shell1.c
+shell2.c
+somet.txt

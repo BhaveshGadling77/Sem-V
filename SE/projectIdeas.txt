@@ -1,0 +1,15 @@
+
+## General Project ideas 
+1. AI dataset version control system.
+2. Research Paper Knowledge Graph. 
+3. Airline tracker simulated. 
+4. Railway Network Simulator. -> skipped 
+5. Mini Chatgpt -> skipped
+6. Online Judge 
+7. Notification Platform 
+
+
+## Games
+
+1. Pandemic Outbreak Simulation 
+2. 

@@ -1,0 +1,3 @@
+This is a file wwhich are having only root permission.
+
+this is file with no read permission to anyone

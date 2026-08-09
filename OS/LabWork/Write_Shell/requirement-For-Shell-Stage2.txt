@@ -1,0 +1,7 @@
+setting of PS1 env variable. 
+
+remove the execvp from code use some other logic.
+
+Handle the error properly.
+the error should be Handled perfectly by the command not by the program itself.
+
