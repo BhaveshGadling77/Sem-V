@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DBMS Study Pack — Ch.1 Introduction &amp; Ch.6 ER Model</title>
+<style>
+  :root {
+    --bg: #fbf9f6;
+    --panel: #ffffff;
+    --ink: #1f2421;
+    --ink-soft: #52564f;
+    --line: #e4ded3;
+    --accent: #8a3b2e;
+    --accent-soft: #f4e6de;
+    --good: #2f6b34;
+    --good-soft: #e8f2e6;
+    --mono-bg: #f1efe7;
+    --sidebar-w: 300px;
+    --serif: "Iowan Old Style", "Georgia", "Palatino Linotype", serif;
+    --sans: "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---------- Header ---------- */
+  header.masthead {
+    background: linear-gradient(135deg, #3a2620 0%, #6b3226 55%, #8a3b2e 100%);
+    color: #f6ece4;
+    padding: 3rem 2rem 2.4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header.masthead::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.06) 0, transparent 45%),
+                       radial-gradient(circle at 80% 70%, rgba(255,255,255,0.05) 0, transparent 40%);
+  }
+  header.masthead .eyebrow {
+    font-family: var(--sans);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: #e7c8b6;
+    margin-bottom: 0.9rem;
+    position: relative;
+  }
+  header.masthead h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    margin: 0 0 0.6rem;
+    font-weight: 600;
+    position: relative;
+  }
+  header.masthead p.sub {
+    font-family: var(--sans);
+    color: #ecd9cc;
+    font-size: 0.98rem;
+    margin: 0;
+    position: relative;
+  }
+  header.masthead .stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem 1.4rem;
+    margin-top: 1.5rem;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    position: relative;
+  }
+  header.masthead .stats span {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.18);
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+  }
+
+  /* Global controls bar */
+  .controls-bar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(251,249,246,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+    padding: 0.7rem 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    font-family: var(--sans);
+  }
+  .controls-bar button {
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    background: #fff;
+    color: var(--accent);
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .controls-bar button:hover { background: var(--accent); color: #fff; }
+  .controls-bar button.secondary {
+    border-color: var(--line);
+    color: var(--ink-soft);
+  }
+  .controls-bar button.secondary:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .controls-bar .score {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Layout ---------- */
+  .layout {
+    display: grid;
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+    max-width: 1320px;
+    margin: 0 auto;
+  }
+
+  nav.sidebar {
+    position: sticky;
+    top: 54px;
+    align-self: start;
+    height: calc(100vh - 54px);
+    overflow-y: auto;
+    padding: 1.6rem 1.4rem 3rem;
+    border-right: 1px solid var(--line);
+    font-family: var(--sans);
+  }
+  nav.sidebar .nav-title {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 0.9rem;
+  }
+  nav.sidebar .toc ul { list-style: none; margin: 0; padding-left: 0; }
+  nav.sidebar .toc > ul > li { margin-bottom: 0.55rem; }
+  nav.sidebar .toc a {
+    display: block;
+    color: var(--ink);
+    padding: 0.28rem 0.5rem;
+    border-radius: 7px;
+    font-size: 0.9rem;
+  }
+  nav.sidebar .toc > ul > li > a { font-weight: 600; }
+  nav.sidebar .toc ul ul {
+    padding-left: 0.9rem;
+    border-left: 1px dashed var(--line);
+    margin-left: 0.4rem;
+  }
+  nav.sidebar .toc a:hover {
+    background: var(--accent-soft);
+    text-decoration: none;
+    color: var(--accent);
+  }
+
+  #search-box {
+    width: 100%;
+    padding: 0.55rem 0.7rem;
+    margin-bottom: 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    background: var(--panel);
+  }
+
+  main { padding: 2.4rem clamp(1.2rem, 4vw, 4rem) 6rem; min-width: 0; }
+  main > h1:first-child { display: none; }
+
+  h1, h2, h3 { font-family: var(--serif); color: var(--ink); scroll-margin-top: 4.5rem; }
+  h1 { font-size: 1.9rem; border-bottom: 3px solid var(--accent); padding-bottom: 0.5rem; margin-top: 3rem; }
+  h2 {
+    font-size: 1.35rem;
+    margin-top: 2.6rem;
+    color: var(--accent);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.35rem;
+  }
+  h3 { font-size: 1.08rem; margin-top: 1.8rem; font-family: var(--sans); font-weight: 700; color: #3a3f36; }
+
+  p { margin: 0.6rem 0; }
+  em { color: var(--ink-soft); }
+  ol, ul { padding-left: 1.4rem; }
+  li { margin: 0.7rem 0; }
+
+  code {
+    font-family: var(--mono);
+    background: var(--mono-bg);
+    padding: 0.12rem 0.4rem;
+    border-radius: 5px;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #2b2621;
+    color: #f1e9df;
+    padding: 1rem 1.2rem;
+    border-radius: 10px;
+    overflow-x: auto;
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+  pre code { background: none; padding: 0; color: inherit; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 2.6rem 0; }
+
+  /* ---------- Interactive Q/A + MCQ cards ---------- */
+  li.qa-item, li.mcq-item {
+    list-style: none;
+    margin: 0.85rem 0;
+    padding: 0.95rem 1.1rem;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  ol:has(li.qa-item), ol:has(li.mcq-item) { padding-left: 0; counter-reset: item; }
+  li.qa-item, li.mcq-item { counter-increment: item; position: relative; padding-left: 3rem; }
+  li.qa-item::before, li.mcq-item::before {
+    content: counter(item) ".";
+    position: absolute;
+    left: 1rem;
+    top: 0.95rem;
+    font-family: var(--sans);
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.9rem;
+  }
+
+  .q-row { margin-bottom: 0.55rem; }
+  .tag {
+    display: inline-block;
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 0.68rem;
+    padding: 0.08rem 0.45rem;
+    border-radius: 5px;
+    margin-right: 0.5rem;
+    vertical-align: 1px;
+  }
+  .tag.q { background: #e6ecf3; color: #2b4c72; }
+  .tag.a { background: var(--good-soft); color: var(--good); }
+
+  .mcq-stem { margin-bottom: 0.55rem; }
+
+  .reveal-btn {
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid transparent;
+    padding: 0.32rem 0.85rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .reveal-btn:hover { background: var(--accent); color: #fff; }
+  .reveal-btn.is-open { background: var(--good-soft); color: var(--good); }
+  .reveal-btn.is-open:hover { background: var(--good); color: #fff; }
+
+  .answer-box {
+    margin-top: 0.65rem;
+    padding: 0.65rem 0.85rem;
+    background: var(--good-soft);
+    border-left: 3px solid var(--good);
+    border-radius: 6px;
+    font-size: 0.97rem;
+    animation: fadeIn .18s ease;
+  }
+  .answer-box.hidden { display: none; }
+  .correct-letter {
+    text-transform: uppercase;
+    color: var(--good);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Section cards */
+  .part-block {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 0.4rem 1.8rem 1.6rem;
+    margin: 1.6rem 0 2.6rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+
+  footer {
+    text-align: center;
+    font-family: var(--sans);
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    padding: 2rem 1rem 3rem;
+  }
+
+  #top-btn {
+    position: fixed;
+    right: 1.6rem;
+    bottom: 1.6rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--sans);
+    z-index: 30;
+  }
+  #top-btn.show { display: flex; }
+
+  @media (max-width: 880px) {
+    .layout { grid-template-columns: 1fr; }
+    nav.sidebar { position: relative; top: 0; height: auto; max-height: none; border-right: none; border-bottom: 1px solid var(--line); }
+  }
+
+  @media print {
+    nav.sidebar, #top-btn, .controls-bar { display: none; }
+    .layout { grid-template-columns: 1fr; }
+    .answer-box.hidden { display: block !important; }
+    .reveal-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="eyebrow">Database System Concepts, 5th Ed. — Silberschatz · Korth · Sudarshan</div>
+  <h1>DBMS Study Pack</h1>
+  <p class="sub">Chapter 1 — Introduction &nbsp;·&nbsp; Chapter 6 — Entity-Relationship Model</p>
+  <div class="stats">
+    <span>100 Short Answers</span>
+    <span>100 MCQs</span>
+    <span>30 SQL Queries</span>
+    <span>15 Relational Algebra</span>
+    <span>15 ER Design Questions</span>
+  </div>
+</header>
+
+<div class="controls-bar">
+  <button id="toggle-all-btn" onclick="toggleAllAnswers()">Show All Answers</button>
+  <button class="secondary" onclick="window.print()">Print / Save as PDF</button>
+  <span class="score">Click any question to reveal just that answer</span>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <input id="search-box" type="text" placeholder="Filter questions on page ( / )">
+    <div class="nav-title">Contents</div>
+    <div class="toc">
+<ul>
+<li><a href="#dbms-study-pack-chapter-1-introduction-chapter-6-entity-relationship-model">DBMS Study Pack — Chapter 1 (Introduction) &amp; Chapter 6 (Entity-Relationship Model)</a></li>
+<li><a href="#part-a-short-answer-questions-100">PART A: SHORT ANSWER QUESTIONS (100)</a><ul>
+<li><a href="#chapter-1-introduction-q1q50">Chapter 1 — Introduction (Q1–Q50)</a></li>
+<li><a href="#chapter-6-entity-relationship-model-q51q100">Chapter 6 — Entity-Relationship Model (Q51–Q100)</a></li>
+</ul>
+</li>
+<li><a href="#part-b-multiple-choice-questions-100">PART B: MULTIPLE CHOICE QUESTIONS (100)</a><ul>
+<li><a href="#chapter-1-q1q50">Chapter 1 (Q1–Q50)</a></li>
+<li><a href="#chapter-6-q51q100">Chapter 6 (Q51–Q100)</a></li>
+</ul>
+</li>
+<li><a href="#part-c-sql-practice-queries">PART C: SQL PRACTICE QUERIES</a><ul>
+<li><a href="#easy-10">Easy (10)</a></li>
+<li><a href="#medium-10">Medium (10)</a></li>
+<li><a href="#hard-10">Hard (10)</a></li>
+</ul>
+</li>
+<li><a href="#part-d-relational-algebra-questions">PART D: RELATIONAL ALGEBRA QUESTIONS</a></li>
+<li><a href="#part-e-er-model-design-questions">PART E: ER MODEL DESIGN QUESTIONS</a></li>
+</ul>
+</div>
+
+  </nav>
+  <main id="main-content">
+<h1 id="dbms-study-pack-chapter-1-introduction-chapter-6-entity-relationship-model">DBMS Study Pack — Chapter 1 (Introduction) &amp; Chapter 6 (Entity-Relationship Model)</h1>
+<p><em>Based on Database System Concepts, 5th Ed. (Silberschatz, Korth, Sudarshan)</em></p>
+<hr />
+<h1 id="part-a-short-answer-questions-100">PART A: SHORT ANSWER QUESTIONS (100)</h1>
+<h2 id="chapter-1-introduction-q1q50">Chapter 1 — Introduction (Q1–Q50)</h2>
+<ol>
+<li class="qa-item" id="qa-1"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a DBMS?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A collection of interrelated data plus a set of programs to access that data conveniently and efficiently.</span></div></li>
+<li class="qa-item" id="qa-2"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Name four applications of database systems.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Banking, airlines, universities, sales (also manufacturing, HR, online retail).</span></div></li>
+<li class="qa-item" id="qa-3"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is data redundancy?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Duplication of the same information across multiple files, causing inconsistency.</span></div></li>
+<li class="qa-item" id="qa-4"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What are the three levels of data abstraction?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Physical, logical, and view level.</span></div></li>
+<li class="qa-item" id="qa-5"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What does the physical level describe?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">How data is actually stored on disk.</span></div></li>
+<li class="qa-item" id="qa-6"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What does the logical level describe?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">What data is stored and the relationships among the data.</span></div></li>
+<li class="qa-item" id="qa-7"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What does the view level describe?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Part of the database relevant to a particular user, hiding other details.</span></div></li>
+<li class="qa-item" id="qa-8"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Define schema.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">The overall logical structure/design of the database.</span></div></li>
+<li class="qa-item" id="qa-9"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Define instance.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">The actual content of the database at a particular point in time.</span></div></li>
+<li class="qa-item" id="qa-10"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is physical data independence?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">The ability to modify the physical schema without changing the logical schema.</span></div></li>
+<li class="qa-item" id="qa-11"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a data model?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A collection of tools for describing data, relationships, semantics, and constraints.</span></div></li>
+<li class="qa-item" id="qa-12"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Name two data models other than the relational model.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Entity-Relationship model, object-based / network / hierarchical model.</span></div></li>
+<li class="qa-item" id="qa-13"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is DML?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Data Manipulation Language — used to access and manipulate data.</span></div></li>
+<li class="qa-item" id="qa-14"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Differentiate procedural and declarative DML.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Procedural specifies what data is needed and how to get it; declarative specifies only what is needed.</span></div></li>
+<li class="qa-item" id="qa-15"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is DDL?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Data Definition Language — used to define the database schema.</span></div></li>
+<li class="qa-item" id="qa-16"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a data dictionary?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A set of tables storing metadata, generated by the DDL compiler.</span></div></li>
+<li class="qa-item" id="qa-17"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is referential integrity?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A constraint ensuring a value in one relation must exist in another (foreign key constraint).</span></div></li>
+<li class="qa-item" id="qa-18"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a relational database?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A database based on the relational model, representing data as a collection of tables.</span></div></li>
+<li class="qa-item" id="qa-19"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What language do most commercial relational DBMSs use?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">SQL.</span></div></li>
+<li class="qa-item" id="qa-20"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is logical database design?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Deciding the database schema — the relation schemas and their attributes.</span></div></li>
+<li class="qa-item" id="qa-21"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is physical database design?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Deciding the physical layout/storage structures of the database.</span></div></li>
+<li class="qa-item" id="qa-22"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is an entity in the ER model?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A "thing" or "object" distinguishable from other objects.</span></div></li>
+<li class="qa-item" id="qa-23"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a relationship in the ER model?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">An association among several entities.</span></div></li>
+<li class="qa-item" id="qa-24"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What are object-relational data models?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Models extending the relational model with object orientation and complex (non-atomic) attribute types.</span></div></li>
+<li class="qa-item" id="qa-25"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What does XML stand for?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Extensible Markup Language.</span></div></li>
+<li class="qa-item" id="qa-26"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Who defined XML?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">The World Wide Web Consortium (W3C).</span></div></li>
+<li class="qa-item" id="qa-27"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is the storage manager responsible for?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Interfacing with the file manager and efficiently storing, retrieving, and updating data.</span></div></li>
+<li class="qa-item" id="qa-28"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Name three issues handled by the storage manager.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Storage access, file organization, indexing and hashing.</span></div></li>
+<li class="qa-item" id="qa-29"><div class="q-row"><span class="tag q">Q</span><span class="q-text">List the three steps of query processing.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Parsing and translation, optimization, evaluation.</span></div></li>
+<li class="qa-item" id="qa-30"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What does the query optimizer use to choose an execution plan?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Statistics about the relations/data.</span></div></li>
+<li class="qa-item" id="qa-31"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a transaction?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A collection of operations performing a single logical function in a database application.</span></div></li>
+<li class="qa-item" id="qa-32"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What does transaction management ensure?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">The database stays consistent despite system and transaction failures.</span></div></li>
+<li class="qa-item" id="qa-33"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What does the concurrency-control manager do?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Controls interaction among concurrent transactions to preserve consistency.</span></div></li>
+<li class="qa-item" id="qa-34"><div class="q-row"><span class="tag q">Q</span><span class="q-text">List four types of database architecture.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Centralized, client-server, parallel (multiprocessor), distributed.</span></div></li>
+<li class="qa-item" id="qa-35"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Who are application programmers?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Users who interact with the system through DML calls embedded in a host language.</span></div></li>
+<li class="qa-item" id="qa-36"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Who are naive users?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Users who invoke existing application programs (e.g., bank tellers, web users).</span></div></li>
+<li class="qa-item" id="qa-37"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Who are sophisticated users?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Users who form requests directly in a database query language.</span></div></li>
+<li class="qa-item" id="qa-38"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is the role of a DBA?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Coordinates all activities of the database system.</span></div></li>
+<li class="qa-item" id="qa-39"><div class="q-row"><span class="tag q">Q</span><span class="q-text">List three duties of a DBA.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Schema definition, granting user authority, specifying integrity constraints.</span></div></li>
+<li class="qa-item" id="qa-40"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Who is credited with defining the relational data model, and when?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Ted Codd, late 1960s/1970s.</span></div></li>
+<li class="qa-item" id="qa-41"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Which two research prototypes implemented the relational model?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">IBM's System R and UC Berkeley's Ingres.</span></div></li>
+<li class="qa-item" id="qa-42"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What became the industry-standard query language in the 1980s?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">SQL.</span></div></li>
+<li class="qa-item" id="qa-43"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What characterized databases in the 1990s?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Large decision-support/data-mining apps, multi-terabyte warehouses, emergence of Web commerce.</span></div></li>
+<li class="qa-item" id="qa-44"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How do application programs typically access a database?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Through embedded SQL or an API such as ODBC/JDBC.</span></div></li>
+<li class="qa-item" id="qa-45"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Give an example of an integrity constraint.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">account_balance &gt; 0.</span></div></li>
+<li class="qa-item" id="qa-46"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What can uncontrolled concurrent access cause?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Data inconsistency (e.g., lost updates).</span></div></li>
+<li class="qa-item" id="qa-47"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What does atomicity of updates mean?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A transaction either completes fully or has no effect at all.</span></div></li>
+<li class="qa-item" id="qa-48"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What are domain constraints?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Constraints restricting the permitted values of an attribute.</span></div></li>
+<li class="qa-item" id="qa-49"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is an assertion in DDL?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A general integrity constraint the database must always satisfy.</span></div></li>
+<li class="qa-item" id="qa-50"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What does a two-tier architecture consist of?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A client (application) and a server (database system) connected via a network.</span></div></li>
+</ol>
+<h2 id="chapter-6-entity-relationship-model-q51q100">Chapter 6 — Entity-Relationship Model (Q51–Q100)</h2>
+<ol start="51">
+<li class="qa-item" id="qa-51"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Define entity set.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A set of entities of the same type sharing the same properties.</span></div></li>
+<li class="qa-item" id="qa-52"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Define relationship set.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A set of relationships of the same type among entities from given entity sets.</span></div></li>
+<li class="qa-item" id="qa-53"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is the degree of a relationship set?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">The number of entity sets participating in it.</span></div></li>
+<li class="qa-item" id="qa-54"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a binary relationship?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A relationship set involving exactly two entity sets.</span></div></li>
+<li class="qa-item" id="qa-55"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Give an example of a ternary relationship.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">works_on, relating employee, job, and branch.</span></div></li>
+<li class="qa-item" id="qa-56"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a simple attribute?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">An attribute that cannot be divided into subparts.</span></div></li>
+<li class="qa-item" id="qa-57"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a composite attribute?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">An attribute divisible into subparts (e.g., name → first_name, last_name).</span></div></li>
+<li class="qa-item" id="qa-58"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a single-valued attribute?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">An attribute with only one value per entity.</span></div></li>
+<li class="qa-item" id="qa-59"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a multivalued attribute?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">An attribute that can have multiple values (e.g., phone_numbers).</span></div></li>
+<li class="qa-item" id="qa-60"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a derived attribute?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">An attribute computed from other attributes (e.g., age from date_of_birth).</span></div></li>
+<li class="qa-item" id="qa-61"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is the domain of an attribute?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">The set of permitted values for that attribute.</span></div></li>
+<li class="qa-item" id="qa-62"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Define super key.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A set of one or more attributes whose values uniquely determine each entity.</span></div></li>
+<li class="qa-item" id="qa-63"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Define candidate key.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A minimal super key.</span></div></li>
+<li class="qa-item" id="qa-64"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Define primary key.</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">The candidate key chosen by the designer to uniquely identify entities.</span></div></li>
+<li class="qa-item" id="qa-65"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What forms the super key of a relationship set?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">The combination of primary keys of the participating entity sets.</span></div></li>
+<li class="qa-item" id="qa-66"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What shape represents an entity set in an ER diagram?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Rectangle.</span></div></li>
+<li class="qa-item" id="qa-67"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What shape represents a relationship set?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Diamond.</span></div></li>
+<li class="qa-item" id="qa-68"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What shape represents an attribute?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Ellipse.</span></div></li>
+<li class="qa-item" id="qa-69"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How is a multivalued attribute drawn?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">As a double ellipse.</span></div></li>
+<li class="qa-item" id="qa-70"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How is a derived attribute drawn?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">As a dashed ellipse.</span></div></li>
+<li class="qa-item" id="qa-71"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How is a primary key attribute indicated in an ER diagram?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">By underlining it.</span></div></li>
+<li class="qa-item" id="qa-72"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a "role" in a relationship?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A label showing how an entity participates in a relationship, especially when an entity set appears more than once.</span></div></li>
+<li class="qa-item" id="qa-73"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What are the four mapping cardinality types?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">One-to-one, one-to-many, many-to-one, many-to-many.</span></div></li>
+<li class="qa-item" id="qa-74"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What does total participation mean?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Every entity in the entity set participates in at least one relationship.</span></div></li>
+<li class="qa-item" id="qa-75"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What does partial participation mean?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Some entities may not participate in any relationship.</span></div></li>
+<li class="qa-item" id="qa-76"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How is total participation shown in an ER diagram?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">With a double line.</span></div></li>
+<li class="qa-item" id="qa-77"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What alternative notation expresses participation/cardinality constraints?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Cardinality limits like 0..* or 1..1 on the connecting lines.</span></div></li>
+<li class="qa-item" id="qa-78"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a weak entity set?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">An entity set that has no primary key of its own.</span></div></li>
+<li class="qa-item" id="qa-79"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What does a weak entity set depend on?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">An identifying (owner/strong) entity set.</span></div></li>
+<li class="qa-item" id="qa-80"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a discriminator (partial key)?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">The attribute set that distinguishes entities within a weak entity set.</span></div></li>
+<li class="qa-item" id="qa-81"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How is a weak entity set drawn?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">As a double rectangle.</span></div></li>
+<li class="qa-item" id="qa-82"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How is the identifying relationship drawn?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">As a double diamond.</span></div></li>
+<li class="qa-item" id="qa-83"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How is the discriminator underlined?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">With a dashed line.</span></div></li>
+<li class="qa-item" id="qa-84"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What forms the primary key of a weak entity set?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">The owner's primary key plus the weak entity's discriminator.</span></div></li>
+<li class="qa-item" id="qa-85"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is specialization?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A top-down process designating subgroupings within an entity set.</span></div></li>
+<li class="qa-item" id="qa-86"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is generalization?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A bottom-up process combining entity sets sharing features into a higher-level entity set.</span></div></li>
+<li class="qa-item" id="qa-87"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How is the ISA relationship drawn?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">As a triangle labeled ISA.</span></div></li>
+<li class="qa-item" id="qa-88"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is attribute inheritance?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A lower-level entity set inherits all attributes and relationships of the higher-level set.</span></div></li>
+<li class="qa-item" id="qa-89"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a disjoint constraint?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">An entity can belong to only one lower-level entity set.</span></div></li>
+<li class="qa-item" id="qa-90"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is an overlapping constraint?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">An entity can belong to more than one lower-level entity set.</span></div></li>
+<li class="qa-item" id="qa-91"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a total generalization constraint?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Every higher-level entity must belong to at least one lower-level entity set.</span></div></li>
+<li class="qa-item" id="qa-92"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is a partial generalization constraint?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">A higher-level entity need not belong to any lower-level entity set.</span></div></li>
+<li class="qa-item" id="qa-93"><div class="q-row"><span class="tag q">Q</span><span class="q-text">What is aggregation?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">Treating a relationship set as an abstract entity so it can participate in another relationship.</span></div></li>
+<li class="qa-item" id="qa-94"><div class="q-row"><span class="tag q">Q</span><span class="q-text">Why is aggregation used?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">To eliminate redundancy that arises when a relationship must itself participate in another relationship.</span></div></li>
+<li class="qa-item" id="qa-95"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How does a strong entity set reduce to a schema?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">To a schema with the same attributes as the entity.</span></div></li>
+<li class="qa-item" id="qa-96"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How does a weak entity set reduce to a schema?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">To a schema with its own attributes plus the identifying strong entity's primary key.</span></div></li>
+<li class="qa-item" id="qa-97"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How is a many-to-many relationship set represented as a schema?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">As a schema with the primary keys of both entity sets plus any descriptive attributes.</span></div></li>
+<li class="qa-item" id="qa-98"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How can a one-to-many relationship be represented without a separate schema?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">By adding the "one" side's primary key as an attribute on the "many" side.</span></div></li>
+<li class="qa-item" id="qa-99"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How are composite attributes represented in a relational schema?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">By flattening them into one column per component.</span></div></li>
+<li class="qa-item" id="qa-100"><div class="q-row"><span class="tag q">Q</span><span class="q-text">How is a multivalued attribute represented in a relational schema?</span></div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden"><span class="tag a">A</span><span class="a-text">As a separate table with the entity's primary key and the attribute, one row per value.</span></div></li>
+</ol>
+<hr />
+<h1 id="part-b-multiple-choice-questions-100">PART B: MULTIPLE CHOICE QUESTIONS (100)</h1>
+<p><em>(Answer key given after each question)</em></p>
+<h2 id="chapter-1-q1q50">Chapter 1 (Q1–Q50)</h2>
+<ol>
+<li class="mcq-item" id="mcq-1"><div class="mcq-stem">DBMS stands for: a) Data Base Management System b) Data Backup Management Software c) Digital Base Management Server d) Database Model System</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">a</strong></div></li>
+<li class="mcq-item" id="mcq-2"><div class="mcq-stem">Which is NOT a drawback of file systems? a) Data redundancy b) Data isolation c) Centralized query optimization d) Integrity problems</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">c</strong></div></li>
+<li class="mcq-item" id="mcq-3"><div class="mcq-stem">The level describing how data is physically stored: a) View b) Logical c) Physical d) Conceptual</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">c</strong></div></li>
+<li class="mcq-item" id="mcq-4"><div class="mcq-stem">The overall logical structure of a database is called: a) Instance b) Schema c) View d) Domain</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-5"><div class="mcq-stem">The database content at a given moment is called: a) Schema b) Instance c) Domain d) Constraint</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-6"><div class="mcq-stem">Physical data independence means: a) Changing logical schema without affecting physical b) Modifying physical schema without changing logical c) Changing views without affecting apps d) None</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-7"><div class="mcq-stem">Which language defines the database schema? a) DML b) DDL c) QBE d) HTML</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-8"><div class="mcq-stem">DML stands for: a) Data Manipulation Language b) Data Modeling Language c) Database Markup Language d) Data Migration Language</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">a</strong></div></li>
+<li class="mcq-item" id="mcq-9"><div class="mcq-stem">A procedural DML requires specifying: a) Only what data is needed b) What data and how to get it c) Nothing d) Only the schema</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-10"><div class="mcq-stem">SQL is: a) Procedural b) Non-procedural (declarative) c) A programming language only d) Assembly-level</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-11"><div class="mcq-stem">Referential integrity is enforced in SQL using: a) primary key b) references constraint c) domain constraint d) assertion only</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-12"><div class="mcq-stem">A data dictionary stores: a) Passwords only b) Metadata c) Actual table rows d) None</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-13"><div class="mcq-stem">A relational database represents data as: a) Trees b) Graphs c) Tables d) Objects only</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">c</strong></div></li>
+<li class="mcq-item" id="mcq-14"><div class="mcq-stem">The most widely used relational query language is: a) XML b) SQL c) UML d) XQuery</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-15"><div class="mcq-stem">Logical database design mainly decides: a) Physical layout b) The database schema c) Hardware d) Network topology</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-16"><div class="mcq-stem">Physical database design decides: a) Relation schemas b) The physical layout of the database c) The ER diagram d) Business rules</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-17"><div class="mcq-stem">The ER model is mainly used for: a) Query optimization b) Database design c) Transaction management d) Storage management</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-18"><div class="mcq-stem">Object-relational models extend the relational model by: a) Removing SQL b) Adding object orientation &amp; complex types c) Removing tables d) Adding tapes</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-19"><div class="mcq-stem">XML was originally intended as a: a) Programming language b) Document markup language c) Query language d) Relational data model</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-20"><div class="mcq-stem">XML was defined by: a) IBM b) W3C c) ANSI d) ISO</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-21"><div class="mcq-stem">The storage manager interacts with: a) The file manager b) The end user directly c) The network layer d) The GUI</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">a</strong></div></li>
+<li class="mcq-item" id="mcq-22"><div class="mcq-stem">Which is NOT handled by the storage manager? a) Storage access b) File organization c) Query optimization d) Indexing and hashing</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">c</strong></div></li>
+<li class="mcq-item" id="mcq-23"><div class="mcq-stem">First step of query processing: a) Optimization b) Parsing and translation c) Evaluation d) Plan generation only</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-24"><div class="mcq-stem">The query optimizer chooses a plan based on: a) User preference b) Statistics about the data c) Random choice d) File size only</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-25"><div class="mcq-stem">A transaction is: a) A single SELECT only b) A collection of operations forming one logical function c) A backup process d) A type of index</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-26"><div class="mcq-stem">Ensuring database consistency despite failures is the job of: a) Query processor b) Transaction management c) Storage manager d) DDL compiler</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-27"><div class="mcq-stem">The concurrency-control manager: a) Formats disks b) Controls concurrent transaction interaction c) Compiles DDL d) Generates reports</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-28"><div class="mcq-stem">Which is NOT a database architecture type mentioned in the chapter? a) Centralized b) Client-server c) Parallel d) Cloud-native</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">d</strong></div></li>
+<li class="mcq-item" id="mcq-29"><div class="mcq-stem">Application programmers interact through: a) DDL only b) DML calls c) Direct disk access d) Natural language</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-30"><div class="mcq-stem">Naive users typically: a) Write new DML b) Invoke existing application programs c) Design the schema d) Administer the database</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-31"><div class="mcq-stem">Sophisticated users: a) Cannot write queries b) Form requests in a query language c) Only use GUIs d) Are always DBAs</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-32"><div class="mcq-stem">A DBA duty: a) Writing app code only b) Schema definition c) Manufacturing hardware d) Marketing</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-33"><div class="mcq-stem">Ted Codd is credited with defining: a) Hierarchical model b) Relational data model c) XML d) Network model</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-34"><div class="mcq-stem">System R was developed by: a) UC Berkeley b) IBM c) Oracle d) Microsoft</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-35"><div class="mcq-stem">Ingres was developed by: a) IBM b) UC Berkeley c) Stanford d) MIT</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-36"><div class="mcq-stem">In the 1980s, the industry-standard query language became: a) QUEL b) SQL c) XQuery d) Datalog</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-37"><div class="mcq-stem">Multi-terabyte data warehouses became common in the: a) 1960s b) 1970s c) 1990s d) 1950s</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">c</strong></div></li>
+<li class="mcq-item" id="mcq-38"><div class="mcq-stem">Two-tier architecture consists of: a) Client and server b) Server only c) Client only d) Three layers</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">a</strong></div></li>
+<li class="mcq-item" id="mcq-39"><div class="mcq-stem">Three-tier architecture adds which layer? a) Storage b) Application server c) Network d) Backup</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-40"><div class="mcq-stem">Example of an integrity constraint: a) balance &gt; 0 b) SELECT * FROM account c) CREATE TABLE account d) DROP TABLE account</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">a</strong></div></li>
+<li class="mcq-item" id="mcq-41"><div class="mcq-stem">Atomicity of updates ensures: a) Partial updates allowed b) Transaction completes fully or not at all c) Always redundant data d) Faster queries</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-42"><div class="mcq-stem">Concurrent access problems can cause: a) Faster queries always b) Data inconsistency c) Automatic security d) No effect</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-43"><div class="mcq-stem">Domain constraints restrict: a) Number of tables b) Permitted attribute values c) Number of users d) Network bandwidth</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-44"><div class="mcq-stem">An assertion in DDL is: a) A transaction type b) A general integrity constraint c) An optimization rule d) A storage device</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-45"><div class="mcq-stem">ODBC/JDBC are: a) Data models b) APIs to access databases c) Query languages d) Operating systems</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-46"><div class="mcq-stem">The view level mainly deals with: a) Physical storage b) Hiding data for security/simplicity c) Network protocols d) Disk formatting</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-47"><div class="mcq-stem">Which is a database application area? a) Banking b) Airlines c) Universities d) All of the above</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">d</strong></div></li>
+<li class="mcq-item" id="mcq-48"><div class="mcq-stem">A minimal super key is called: a) Foreign key b) Candidate key c) Composite key d) Alternate index</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-49"><div class="mcq-stem">Web commerce emergence affecting databases occurred in the: a) 1970s b) 1980s c) 1990s d) 1950s</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">c</strong></div></li>
+<li class="mcq-item" id="mcq-50"><div class="mcq-stem">The relational model represents data using: a) Graphs b) A collection of tables c) Trees d) XML tags only</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+</ol>
+<h2 id="chapter-6-q51q100">Chapter 6 (Q51–Q100)</h2>
+<ol start="51">
+<li class="mcq-item" id="mcq-51"><div class="mcq-stem">An entity is: a) A relationship between tables b) An object distinguishable from others c) A query d) A schema</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-52"><div class="mcq-stem">A set of entities sharing the same properties is: a) Relationship set b) Entity set c) Attribute set d) Domain set</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-53"><div class="mcq-stem">A relationship is: a) An attribute b) An association among entities c) A key d) A view</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-54"><div class="mcq-stem">The number of entity sets in a relationship set is its: a) Cardinality b) Degree c) Domain d) Index</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-55"><div class="mcq-stem">A relationship involving two entity sets is: a) Unary b) Binary c) Ternary d) Quaternary</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-56"><div class="mcq-stem">A relationship involving three entity sets is: a) Binary b) Ternary c) Unary d) Composite</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-57"><div class="mcq-stem">An attribute divisible into subparts is: a) Simple b) Composite c) Derived d) Single-valued</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-58"><div class="mcq-stem">Age computed from date_of_birth is a: a) Composite attribute b) Derived attribute c) Multivalued attribute d) Simple attribute</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-59"><div class="mcq-stem">phone_numbers (multiple values) is a: a) Simple attribute b) Multivalued attribute c) Derived attribute d) Key attribute</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-60"><div class="mcq-stem">The set of permitted values for an attribute is its: a) Range b) Domain c) Scope d) Extent</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-61"><div class="mcq-stem">A minimal super key is a: a) Primary key b) Candidate key c) Foreign key d) Composite key</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-62"><div class="mcq-stem">A rectangle in an ER diagram represents: a) An attribute b) An entity set c) A relationship set d) A key</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-63"><div class="mcq-stem">A diamond in an ER diagram represents: a) An entity set b) A relationship set c) An attribute d) A domain</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-64"><div class="mcq-stem">An ellipse in an ER diagram represents: a) An entity set b) A relationship set c) An attribute d) A weak entity</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">c</strong></div></li>
+<li class="mcq-item" id="mcq-65"><div class="mcq-stem">A double ellipse represents: a) A derived attribute b) A multivalued attribute c) A primary key d) A weak entity</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-66"><div class="mcq-stem">A dashed ellipse represents: a) A multivalued attribute b) A derived attribute c) A composite attribute d) A key attribute</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-67"><div class="mcq-stem">Primary key attributes are indicated by: a) Double lines b) Underlining c) Dashed borders d) Bold color</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-68"><div class="mcq-stem">Labels like "manager"/"worker" on connecting lines are called: a) Keys b) Roles c) Domains d) Aggregates</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-69"><div class="mcq-stem">Which is NOT one of the four mapping cardinalities? a) One-to-one b) One-to-many c) Many-to-many d) Many-to-infinite</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">d</strong></div></li>
+<li class="mcq-item" id="mcq-70"><div class="mcq-stem">Customer↔loan, each associated with at most one of the other: a) One-to-many b) Many-to-one c) One-to-one d) Many-to-many</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">c</strong></div></li>
+<li class="mcq-item" id="mcq-71"><div class="mcq-stem">Loan associated with several customers and vice versa: a) One-to-one b) One-to-many c) Many-to-many d) None</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">c</strong></div></li>
+<li class="mcq-item" id="mcq-72"><div class="mcq-stem">Total participation means: a) Every entity participates in ≥1 relationship b) No entity participates c) Only some participate d) Relationship set is empty</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">a</strong></div></li>
+<li class="mcq-item" id="mcq-73"><div class="mcq-stem">Total participation is shown by: a) Dashed line b) Double line c) Dotted line d) Arrow</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-74"><div class="mcq-stem">Partial participation means: a) Every entity must participate b) Some entities may not participate c) All relationships are total d) None participate</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-75"><div class="mcq-stem">An entity set with no primary key of its own is: a) Strong entity set b) Weak entity set c) Derived entity set d) Composite entity set</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-76"><div class="mcq-stem">A weak entity set depends on: a) A relationship attribute b) An identifying (owner) entity set c) A view d) A domain</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-77"><div class="mcq-stem">The attribute set distinguishing entities within a weak entity set is the: a) Primary key b) Discriminator c) Foreign key d) Candidate key</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-78"><div class="mcq-stem">A weak entity set is drawn as: a) A single rectangle b) A double rectangle c) A diamond d) An ellipse</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-79"><div class="mcq-stem">The identifying relationship is drawn as: a) A single diamond b) A double diamond c) A triangle d) A rectangle</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-80"><div class="mcq-stem">The primary key of a weak entity set consists of: a) Only its discriminator b) Owner's primary key + discriminator c) A random number d) None</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-81"><div class="mcq-stem">Specialization is a: a) Bottom-up process b) Top-down process c) Random process d) Optimization technique</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-82"><div class="mcq-stem">Generalization is a: a) Top-down process b) Bottom-up process combining entity sets c) Same as normalization d) A type of aggregation only</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-83"><div class="mcq-stem">The ISA relationship is drawn as a: a) Diamond b) Rectangle c) Triangle d) Ellipse</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">c</strong></div></li>
+<li class="mcq-item" id="mcq-84"><div class="mcq-stem">Attribute inheritance means: a) Lower-level entities inherit higher-level attributes b) Reverse c) No sharing d) Random duplication</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">a</strong></div></li>
+<li class="mcq-item" id="mcq-85"><div class="mcq-stem">An entity belonging to only one lower-level set is: a) Overlapping b) Disjoint c) Total d) Partial</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-86"><div class="mcq-stem">An entity belonging to more than one lower-level set is: a) Disjoint b) Overlapping c) Partial d) None</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-87"><div class="mcq-stem">Every higher-level entity must belong to a lower-level set — this is: a) Partial b) Total c) Disjoint d) Overlapping</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-88"><div class="mcq-stem">A higher-level entity need not belong to any lower-level set — this is: a) Total b) Partial c) Disjoint d) Overlapping</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-89"><div class="mcq-stem">Treating a relationship set as an abstract entity is called: a) Specialization b) Generalization c) Aggregation d) Normalization</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">c</strong></div></li>
+<li class="mcq-item" id="mcq-90"><div class="mcq-stem">Aggregation helps: a) Increase redundancy b) Eliminate redundancy for relationships-on-relationships c) Remove all attributes d) Convert weak to strong entities</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-91"><div class="mcq-stem">A strong entity set reduces to a schema: a) With no attributes b) With the same attributes as the entity c) Only its primary key d) Cannot be reduced</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-92"><div class="mcq-stem">A weak entity set's schema must include: a) Only its own attributes b) Its own attributes + owner's primary key c) Nothing d) Only unrelated foreign keys</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-93"><div class="mcq-stem">A many-to-many relationship set is represented by: a) A schema with both entities' primary keys + descriptive attributes b) No schema c) One entity's key only d) A view only</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">a</strong></div></li>
+<li class="mcq-item" id="mcq-94"><div class="mcq-stem">A one-to-many relationship can be represented without a separate schema by: a) Always creating a third table b) Adding "one" side's key to the "many" side c) Ignoring it d) Merging both entities</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-95"><div class="mcq-stem">Composite attributes are represented in a relational schema by: a) One column b) Flattening into separate columns c) Ignoring subparts d) Converting to XML</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-96"><div class="mcq-stem">A multivalued attribute is represented by: a) A single comma-separated column b) A separate table (entity key + attribute, one row per value) c) It cannot be represented d) A derived attribute only</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-97"><div class="mcq-stem">"payment" in the bank ER diagram is best modeled as: a) A strong entity set b) A weak entity set c) A relationship set only d) An attribute of loan</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-98"><div class="mcq-stem">course_offering is a weak entity because: a) It's unrelated to course b) Its discriminator alone isn't globally unique c) It's a strong entity d) It has too many attributes</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-99"><div class="mcq-stem">A relationship attribute like access_date can be: a) Not modeled in ER diagrams b) Attached to the relationship diamond c) Only an entity attribute d) Not allowed in SQL</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+<li class="mcq-item" id="mcq-100"><div class="mcq-stem">The combination of participating entity sets' primary keys in a relationship forms: a) A foreign key only b) A super key of the relationship set c) A domain d) A weak key</div><button class="reveal-btn" onclick="toggleAnswer(this)">Show Answer</button><div class="answer-box hidden">Correct answer: <strong class="correct-letter">b</strong></div></li>
+</ol>
+<hr />
+<h1 id="part-c-sql-practice-queries">PART C: SQL PRACTICE QUERIES</h1>
+<h3 id="reference-schema-bank-example-from-chapters-1-6">Reference schema (bank example, from Chapters 1 &amp; 6)</h3>
+<pre><code>customer(customer_id, customer_name, customer_street, customer_city)
+account(account_number, branch_name, balance)
+loan(loan_number, branch_name, amount)
+depositor(customer_id, account_number)
+borrower(customer_id, loan_number)
+branch(branch_name, branch_city, assets)
+employee(employee_id, employee_name, branch_name, salary)
+</code></pre>
+<h2 id="easy-10">Easy (10)</h2>
+<ol>
+<li>List the names of all customers.
+   <code>SELECT customer_name FROM customer;</code></li>
+<li>Find all customers living in 'Harrison'.
+   <code>SELECT * FROM customer WHERE customer_city = 'Harrison';</code></li>
+<li>List account numbers with balance greater than 1000.
+   <code>SELECT account_number FROM account WHERE balance &gt; 1000;</code></li>
+<li>Find branch names located in 'Brooklyn'.
+   <code>SELECT branch_name FROM branch WHERE branch_city = 'Brooklyn';</code></li>
+<li>List all loans with their amounts, sorted by amount descending.
+   <code>SELECT loan_number, amount FROM loan ORDER BY amount DESC;</code></li>
+<li>Find the total number of customers.
+   <code>SELECT COUNT(*) FROM customer;</code></li>
+<li>List the distinct cities where customers live.
+   <code>SELECT DISTINCT customer_city FROM customer;</code></li>
+<li>Find the average balance of all accounts.
+   <code>SELECT AVG(balance) FROM account;</code></li>
+<li>List employees earning more than 50000.
+   <code>SELECT employee_name FROM employee WHERE salary &gt; 50000;</code></li>
+<li>Find customer names starting with 'J'.
+    <code>SELECT customer_name FROM customer WHERE customer_name LIKE 'J%';</code></li>
+</ol>
+<h2 id="medium-10">Medium (10)</h2>
+<ol>
+<li>Find the names of all customers who have an account at the bank.
+   <code>SELECT DISTINCT c.customer_name FROM customer c, depositor d WHERE c.customer_id = d.customer_id;</code></li>
+<li>Find customers who have both a loan and an account.
+   <code>SELECT customer_name FROM customer WHERE customer_id IN (SELECT customer_id FROM depositor) AND customer_id IN (SELECT customer_id FROM borrower);</code></li>
+<li>Find total balance of accounts at each branch.
+   <code>SELECT branch_name, SUM(balance) AS total_balance FROM account GROUP BY branch_name;</code></li>
+<li>Find branches with more than 5 accounts.
+   <code>SELECT branch_name FROM account GROUP BY branch_name HAVING COUNT(*) &gt; 5;</code></li>
+<li>Find names of customers who have a loan at the 'Perryridge' branch.
+   <code>SELECT c.customer_name FROM customer c JOIN borrower b ON c.customer_id = b.customer_id JOIN loan l ON b.loan_number = l.loan_number WHERE l.branch_name = 'Perryridge';</code></li>
+<li>List each customer's name with their total number of accounts.
+   <code>SELECT c.customer_name, COUNT(d.account_number) AS num_accounts FROM customer c JOIN depositor d ON c.customer_id = d.customer_id GROUP BY c.customer_name;</code></li>
+<li>Find branches whose average account balance exceeds 1200.
+   <code>SELECT branch_name, AVG(balance) FROM account GROUP BY branch_name HAVING AVG(balance) &gt; 1200;</code></li>
+<li>Find branches with greater assets than every branch in 'Brooklyn'.
+   <code>SELECT branch_name FROM branch WHERE assets &gt; ALL (SELECT assets FROM branch WHERE branch_city = 'Brooklyn');</code></li>
+<li>List customer names with their loan amounts.
+   <code>SELECT c.customer_name, l.amount FROM customer c JOIN borrower b ON c.customer_id = b.customer_id JOIN loan l ON b.loan_number = l.loan_number;</code></li>
+<li>Find the branch with the maximum total assets.
+    <code>SELECT branch_name FROM branch WHERE assets = (SELECT MAX(assets) FROM branch);</code></li>
+</ol>
+<h2 id="hard-10">Hard (10)</h2>
+<ol>
+<li>Find customers who have an account but no loan.
+   <code>SELECT customer_name FROM customer WHERE customer_id IN (SELECT customer_id FROM depositor) AND customer_id NOT IN (SELECT customer_id FROM borrower);</code></li>
+<li>Find the branch(es) with the maximum total balance of accounts.
+   <code>sql
+   SELECT branch_name FROM account
+   GROUP BY branch_name
+   HAVING SUM(balance) = (
+     SELECT MAX(total) FROM (SELECT SUM(balance) AS total FROM account GROUP BY branch_name) AS t
+   );</code></li>
+<li>Find customers who have accounts at every branch in 'Brooklyn' (division query).
+   <code>sql
+   SELECT customer_name FROM customer c
+   WHERE NOT EXISTS (
+     (SELECT branch_name FROM branch WHERE branch_city = 'Brooklyn')
+     EXCEPT
+     (SELECT a.branch_name FROM depositor d, account a
+      WHERE d.customer_id = c.customer_id AND d.account_number = a.account_number)
+   );</code></li>
+<li>Find employees earning more than the average salary at their own branch (correlated subquery).
+   <code>SELECT e.employee_name FROM employee e WHERE e.salary &gt; (SELECT AVG(salary) FROM employee e2 WHERE e2.branch_name = e.branch_name);</code></li>
+<li>Find customers who appear in both depositor and borrower (using INTERSECT).
+   <code>SELECT customer_name FROM customer WHERE customer_id IN ((SELECT customer_id FROM depositor) INTERSECT (SELECT customer_id FROM borrower));</code></li>
+<li>Find customers who have never taken a loan (using EXCEPT).
+   <code>SELECT customer_id FROM customer EXCEPT SELECT customer_id FROM borrower;</code></li>
+<li>For each branch, find the loan with the maximum amount at that branch.
+   <code>SELECT branch_name, loan_number, amount FROM loan l1 WHERE amount = (SELECT MAX(amount) FROM loan l2 WHERE l1.branch_name = l2.branch_name);</code></li>
+<li>Find branches whose average balance is higher than the bank-wide average balance.
+   <code>SELECT branch_name FROM account GROUP BY branch_name HAVING AVG(balance) &gt; (SELECT AVG(balance) FROM account);</code></li>
+<li>Find customers holding the account with the overall maximum balance in the bank.
+   <code>SELECT c.customer_name FROM customer c, depositor d, account a WHERE c.customer_id = d.customer_id AND d.account_number = a.account_number AND a.balance = (SELECT MAX(balance) FROM account);</code></li>
+<li>Rank branches by total assets (window function).
+    <code>SELECT branch_name, assets, RANK() OVER (ORDER BY assets DESC) AS rank FROM branch;</code></li>
+</ol>
+<hr />
+<h1 id="part-d-relational-algebra-questions">PART D: RELATIONAL ALGEBRA QUESTIONS</h1>
+<p><em>(Using π = project, σ = select, ⋈ = natural join, ρ = rename, ÷ = division)</em></p>
+<ol>
+<li>Find names of customers living in 'Harrison'.
+   <code>π customer_name (σ customer_city = 'Harrison' (customer))</code></li>
+<li>Find account numbers with balance greater than 1000.
+   <code>π account_number (σ balance &gt; 1000 (account))</code></li>
+<li>Find names of customers who have both an account and a loan.
+   <code>π customer_name (customer ⋈ (π customer_id(depositor) ∩ π customer_id(borrower)))</code></li>
+<li>Find branch names located in 'Brooklyn'.
+   <code>π branch_name (σ branch_city = 'Brooklyn' (branch))</code></li>
+<li>Find customer_ids with an account but no loan.
+   <code>π customer_id(depositor) − π customer_id(borrower)</code></li>
+<li>Find customer names with a loan at the 'Perryridge' branch.
+   <code>π customer_name (σ branch_name = 'Perryridge' (loan) ⋈ borrower ⋈ customer)</code></li>
+<li>Find customer_ids who have an account or a loan (union).
+   <code>π customer_id(depositor) ∪ π customer_id(borrower)</code></li>
+<li>Find customer_ids who have both an account and a loan (intersection).
+   <code>π customer_id(depositor) ∩ π customer_id(borrower)</code></li>
+<li>Find the total assets per branch (aggregate operator, G for group-by).
+   <code>branch_name 𝒢 sum(assets) (branch)</code></li>
+<li>Find the number of accounts at each branch.
+    <code>branch_name 𝒢 count(account_number) (account)</code></li>
+<li>Find customer names who have accounts at every branch located in 'Brooklyn' (division).
+    <code>(π customer_name, branch_name(depositor ⋈ account)) ÷ (π branch_name(σ branch_city = 'Brooklyn'(branch)))</code></li>
+<li>Write the Cartesian product of customer and depositor.
+    <code>customer × depositor</code></li>
+<li>Use the rename operator to rename the customer relation to cust1.
+    <code>ρ cust1 (customer)</code></li>
+<li>Find employee names earning more than employee with employee_id = 'E101' (self-comparison via rename).
+    <code>π e1.employee_name (ρ e1(employee) ⋈ (σ e2.salary_value(...) ρ e2(employee)))</code> — <em>(conceptually: join a renamed copy of employee to itself on the salary condition)</em></li>
+<li>Find branch names that have no accounts (using set difference).
+    <code>π branch_name(branch) − π branch_name(account)</code></li>
+</ol>
+<hr />
+<h1 id="part-e-er-model-design-questions">PART E: ER MODEL DESIGN QUESTIONS</h1>
+<ol>
+<li>Define entity, entity set, and attribute. Give one example of each of the four attribute types (simple, composite, single-valued/multivalued, derived).</li>
+<li>Design an ER diagram (describe entities, attributes, relationships, and cardinalities) for a <strong>Library Management System</strong> with Book, Member, and Librarian.</li>
+<li>Explain, with an example, when a weak entity set should be used instead of a strong entity set. Use the <code>payment</code> weak entity example from the bank schema.</li>
+<li>Differentiate specialization and generalization with an example (e.g., <code>employee</code> → <code>officer</code>, <code>teller</code>, <code>secretary</code>).</li>
+<li>Explain aggregation with an example. Why can't the <code>works_on</code> and <code>manages</code> relationships in the bank example simply be combined?</li>
+<li>Design an ER diagram for a <strong>Hospital Management System</strong> (Doctor, Patient, Appointment). Specify entities, attributes, relationships, and cardinalities.</li>
+<li>Explain total vs. partial participation using the <code>customer</code>–<code>borrower</code>–<code>loan</code> relationship as an example.</li>
+<li>Show how the ternary relationship <code>works_on</code> (employee, job, branch) could be converted into a set of binary relationships. What is lost or gained in doing so?</li>
+<li>What design issues should be considered when deciding whether something should be an entity set or an attribute? Illustrate with an example.</li>
+<li>Explain how mapping cardinality affects the placement of relationship attributes, using the <code>access_date</code> attribute on the <code>depositor</code> relationship as an example.</li>
+<li>Design an ER diagram for a <strong>University Database</strong>: Student, Course, Instructor, Department, and Enrollment. Include attributes and cardinalities.</li>
+<li>Explain disjoint vs. overlapping constraints using the specialization of <code>employee</code> into <code>officer</code>, <code>teller</code>, and <code>secretary</code>.</li>
+<li>Explain the difference between candidate key and primary key using the <code>customer</code> entity set as an example.</li>
+<li>Show the reduction of the weak entity set <code>payment</code> (identified by <code>loan</code>) to its relational schema.</li>
+<li>Discuss the trade-offs between the two methods of representing specialization/generalization as relational schemas (Method 1: separate schema per level vs. Method 2: schema with all inherited attributes).</li>
+</ol>
+<hr />
+<p><em>End of Study Pack — 100 Short Answers, 100 MCQs, 30 SQL queries, 15 Relational Algebra questions, 15 ER design questions.</em></p>
+  </main>
+</div>
+
+<button id="top-btn" title="Back to top" onclick="window.scrollTo({top:0, behavior:'smooth'})">&uarr;</button>
+
+<footer>Generated study material for personal exam preparation, based on Database System Concepts (5th Ed.), Chapters 1 &amp; 6.</footer>
+
+<script>
+  // ----- Per-item answer toggle -----
+  function toggleAnswer(btn) {
+    const box = btn.nextElementSibling;
+    const nowHidden = box.classList.toggle('hidden');
+    btn.textContent = nowHidden ? 'Show Answer' : 'Hide Answer';
+    btn.classList.toggle('is-open', !nowHidden);
+    syncGlobalButtonLabel();
+  }
+
+  // ----- Global show/hide all -----
+  let allOpen = false;
+  function toggleAllAnswers() {
+    allOpen = !allOpen;
+    document.querySelectorAll('.answer-box').forEach(box => box.classList.toggle('hidden', !allOpen));
+    document.querySelectorAll('.reveal-btn').forEach(btn => {
+      btn.textContent = allOpen ? 'Hide Answer' : 'Show Answer';
+      btn.classList.toggle('is-open', allOpen);
+    });
+    document.getElementById('toggle-all-btn').textContent = allOpen ? 'Hide All Answers' : 'Show All Answers';
+  }
+
+  function syncGlobalButtonLabel() {
+    const total = document.querySelectorAll('.answer-box').length;
+    const open = document.querySelectorAll('.answer-box:not(.hidden)').length;
+    allOpen = open === total;
+    document.getElementById('toggle-all-btn').textContent = allOpen ? 'Hide All Answers' : 'Show All Answers';
+  }
+
+  // ----- Back to top -----
+  window.addEventListener('scroll', () => {
+    document.getElementById('top-btn').classList.toggle('show', window.scrollY > 500);
+  });
+
+  // ----- Search filter (question text only, keeps answers hidden state) -----
+  const searchBox = document.getElementById('search-box');
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== searchBox) {
+      e.preventDefault();
+      searchBox.focus();
+    }
+  });
+  searchBox.addEventListener('input', () => {
+    const term = searchBox.value.trim().toLowerCase();
+    const items = document.querySelectorAll('main li, main pre');
+    items.forEach(el => {
+      if (!term) { el.style.display = ''; return; }
+      el.style.display = el.textContent.toLowerCase().includes(term) ? '' : 'none';
+    });
+  });
+</script>
+
+</body>
+</html>

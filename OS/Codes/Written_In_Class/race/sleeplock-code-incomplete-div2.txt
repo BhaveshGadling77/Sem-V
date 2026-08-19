@@ -1,0 +1,93 @@
+lock(&l);
+//CS
+unlock(&l);
+
+struct lock {
+  int locked;
+}
+void lock(lock *l) {
+ while(testandset(l->locked))
+   ;
+}
+
+void unlock(lock *l) {
+  l->locked = 0;
+}
+
+----v2-----------------------------------
+lock(&l);
+//CS
+unlock(&l);
+
+struct lock {
+  int locked;
+}
+void block() {
+    move proc to waitq; // where is this waitq? 
+    sched(); 
+}
+void lock(lock *l) {
+ if(testandset(l->locked))
+    block();
+}
+
+void unlock(lock *l) {
+  l->locked = 0;
+}
+
+
+----v3-----------------------------------
+lock(&l);
+//CS
+unlock(&l);
+
+struct lock {
+  int locked;
+  waitq q; // q is part of the lock, as thats the purpose of the queue
+}
+void block(lock *l) {
+    proc->status = WAITING;
+    move proc to l->q;  // there is a race here!
+    sched(); 
+}
+void lock(lock *l) {
+ if(testandset(l->locked))
+    block(l);
+}
+
+void unlock(lock *l) {
+  remove all processes from l->q; // imp
+  loop: proc->status = RUNNABLE;
+  l->locked = 0;
+}
+
+
+----v4-----------------------------------
+lock(&l);
+//CS
+unlock(&l);
+
+struct lock {
+  int locked;
+  waitq q; // q is part of the lock, as thats the purpose of the queue
+  int spinlock; // to protect the queue
+}
+void block(lock *l) {
+    myproc()->status = WAITING;
+    spinlock(l->spinlock);
+    move proc to l->q;  // there is a race here!
+    spinunlock(l->spinlock);
+    sched(); 
+}
+void lock(lock *l) {
+ while(testandset(l->locked))
+    block(l);
+}
+
+void unlock(lock *l) {
+  spinlock(l->spinlock);
+  remove all processes from l->q; // imp
+  spinunlock(l->spinlock);
+  loop: proc->status = RUNNABLE;
+  l->locked = 0;
+}

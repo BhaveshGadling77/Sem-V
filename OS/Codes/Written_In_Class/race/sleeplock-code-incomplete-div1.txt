@@ -1,0 +1,30 @@
+struct sleeplock {
+	int locked;
+	int queue;
+	spinlock spl;
+};
+
+lock(struct sleeplock *sl) {
+  while(test-and-set(sl->locked))
+  	block(sl);
+}
+block(sl) {
+   spinlock(sl->spl);
+  proc->status = WAITING;
+   move yourself to sl->queue;
+  spinunlock(sl->spl);
+  sched();
+}
+
+unlock(struct sleeplock *sl) {
+ spinlock(sl->spl);
+ remove processes from sl->queue;
+ loop: proc->status = RUNNABLE;
+ spinulock(sl->spl);
+ sl->islocked = 0;
+}
+
+Code:
+lock(&sl);
+CS
+unlock(&sl);
