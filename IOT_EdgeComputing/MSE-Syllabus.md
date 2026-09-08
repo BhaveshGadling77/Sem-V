@@ -1,0 +1,23 @@
+- [x] Internet of Things Concepts & Architectures
+- [x] Introduction to IoT: Definition, evolution, and real-world applications
+- [x] IoT Architecture Models:
+    - [x] 3-layer
+    - [x] 5-layer 
+    - [x] Cloud-centric architectures;
+- [x] Core Components:
+    - [x] Sensors
+    - [x] Actuators
+    - [x] Embedded systems
+    - [x] Data Flow in IoT systems as Device → Gateway → Cloud → User;
+- [x] IoT Platforms and Middleware;
+    - [x] Shift from Cloud to Edge/Fog Computing
+    - [x] Limitations of cloud-only models
+    - [x] Latency, bandwidth, privacy concerns.
+
+- [x] Introduction to Edge Computing Architectures
+- [x] Edge Computing Fundamentals;
+- [x] Edge vs Fog vs Cloud Computing;
+- [x] Edge Nodes and Edge Data Centers;
+- [x] Real-Time Processing Requirements;
+- [x] Round Trip Time (RTT) and Latency Optimization
+- [x] Edge AI Basics; Resource-Constrained Computing.

@@ -90,19 +90,28 @@ int deleteMax(MaxHeap *heap) {
 	return root;
 }
 
-// helper function to print array and current status
-void printHeap(MaxHeap *heap) {
-	if (heap->size == 0) {
-		printf("Heap is empty.\n");
-		return;
-	}
-	printf("Heap Array Elements: ");
-	for (int i = 0; i < heap->size; i++) {
-		printf("%d ", heap->arr[i]);
-	}
-	printf("\nSize: %d | Capacity: %d\n", heap->size, heap->capacity);
-}
+// Function to display the max heap as a tree structure
+void printHeap(MaxHeap *heap, int index, int space) {
+    if (index >= heap->size) {
+        return;
+    }
 
+    // Increase distance between levels
+    space += 6;
+
+    // Process right child first (printed at top)
+    printHeap(heap, 2 * index + 2, space);
+
+    // Print current node after spaces
+    printf("\n");
+    for (int i = 6; i < space; i++) {
+        printf(" ");
+    }
+    printf("%d\n", heap->arr[index]);
+
+    // Process left child (printed at bottom)
+    printHeap(heap, 2 * index + 1, space);
+}
 // free allocated memory
 void freeHeap(MaxHeap *heap) {
 	if (heap) {
@@ -140,7 +149,7 @@ int main() {
 				break;
 
 			case 3:
-				printHeap(heap);
+				printHeap(heap, 0, 2);
 				break;
 
 			case 4:
