@@ -1,6 +1,11 @@
 # Prerequisites
 *.d
 
+#lost+found
+lost+found/
+
+#vs code
+.vscode
 # Object files
 *.o
 *.ko
