@@ -8,10 +8,11 @@ ALTER TABLE trainhalts
 
 ALTER TABLE trainhalts ADD CONSTRAINT fk_trainhalts_train FOREIGN KEY (id) REFERENCES train(id) ON DELETE CASCADE;
 
+-- testing
 INSERT INTO train VALUES ('T20', 'Mahrashtra Express');
 
 INSERT INTO trainhalts (id, seqno, stcode, timein, timeout) VALUES
-('T20', 999, 'PUNE', '12:00', '13:00');
+('T20', 999, 'PUNE', '12:00', '10:00');
 
 DELETE FROM train WHERE id = ‘T20’
 
