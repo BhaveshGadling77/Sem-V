@@ -1,0 +1,7 @@
+apple|A round fruit that grows on trees.
+application|A program designed to perform a specific task.
+apply|To make a formal request.
+appreciate|To recognize the value of something.
+banana|A long yellow fruit.
+book|A written or printed work consisting of pages.
+computer|An electronic device used to process data.
