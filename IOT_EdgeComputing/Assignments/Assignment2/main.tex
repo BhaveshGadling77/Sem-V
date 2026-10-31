@@ -1,0 +1,568 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage[T1]{fontenc}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+
+% ================= CODE THEME =================
+\definecolor{codebg}{RGB}{30,30,30}
+\definecolor{codegreen}{RGB}{152,195,121}
+\definecolor{codeblue}{RGB}{97,175,239}
+\definecolor{codewhite}{RGB}{220,220,220}
+
+\lstdefinestyle{darkcode}{
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\color{codewhite}\footnotesize,
+    keywordstyle=\color{codeblue},
+    commentstyle=\color{codegreen},
+    stringstyle=\color{codegreen},
+    numbers=none,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{black},
+    tabsize=2,
+    showstringspaces=false
+}
+
+\setlength{\parindent}{0pt}
+\titleformat{\section}{\Large\bfseries}{}{0em}{}   % experiment headings
+\titleformat{\subsection}{\large\bfseries}{}{0em}{}
+
+% ================= HEADER / FOOTER =================
+% Left of header  : current group  (CSE Experiments / ENTC Experiments)
+% Right of header : current experiment title
+\setlength{\headheight}{15pt}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\textbf{\leftmark}}
+\fancyhead[R]{\footnotesize\rightmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ================= EXPERIMENT GROUP MACRO =================
+% \expgroup{CSE Experiments}
+% Starts a new group: adds a divider page, adds an entry to the Table of
+% Contents and switches the page header to this group's name.
+\newcommand{\expgroup}[1]{%
+  \clearpage
+  \phantomsection
+  \addcontentsline{toc}{part}{#1}%
+  \markboth{#1}{}%
+  \thispagestyle{empty}%
+  \vspace*{\fill}
+  \begin{center}
+    {\Huge\bfseries #1}\\[0.4cm]
+    {\large IoT and Edge Computing -- Virtual Labs}
+  \end{center}
+  \vspace*{\fill}
+  \clearpage
+}
+
+% ================= SCREENSHOT MACRO =================
+% \screenshot{file}{caption}
+% Shows the image if the file exists; otherwise a placeholder box,
+% so the document compiles before you add your screenshots.
+\newcommand{\screenshot}[2]{%
+  \begin{figure}[H]
+    \centering
+    \IfFileExists{#1}{%
+      \makebox[\textwidth][c]{\includegraphics[width=\linewidth,height=0.75\textheight,keepaspectratio]{#1}}%
+    }{%
+      \fbox{\parbox[c][6cm][c]{0.85\textwidth}{\centering
+        \textcolor{gray}{Screenshot placeholder\\[2pt]\texttt{\detokenize{#1}}}}}%
+    }
+    \caption{#2}
+  \end{figure}%
+}
+
+% ================= EXPERIMENT TEMPLATE MACROS =================
+% Usage inside each experiment:
+%   \pretest{images/exp1_pretest.png}
+%   \performed{ \screenshot{...}{...} \screenshot{...}{...} }
+%   \posttest{images/exp1_posttest.png}
+\newcommand{\pretest}[1]{%
+  \subsection*{Pre-Test}
+  \screenshot{#1}{Pre-Test Screenshot}
+}
+\newcommand{\performed}[1]{%
+  \subsection*{Experiment Performed on Virtual Lab}
+  #1
+}
+\newcommand{\posttest}[1]{%
+  \subsection*{Post-Test}
+  \screenshot{#1}{Post-Test Screenshot}
+}
+
+\begin{document}
+
+% ================= COVER PAGE =================
+
+\begin{titlepage}
+\centering
+\thispagestyle{empty}
+
+\begin{tikzpicture}[remember picture, overlay]
+\draw[line width=1.5pt]
+(current page.north west) -- (current page.north east);
+\end{tikzpicture}
+
+\vspace*{1.5cm}
+
+{\Huge \textbf{COEP Technological University}}\\[0.3cm]
+{\large Department of Computer Science}\\[2cm]
+
+{\large \textbf{IOT And Edge Computing}}\\[0.4cm]
+{\Large Virtual Labs Assignment}\\[1.8cm]
+
+\includegraphics[width=0.28\textwidth]{coeplogo.png}\\[2cm]
+
+\begin{flushleft}
+\large
+\textbf{Submitted By: Bhavesh Gadling}\\
+MIS No: 612415061\\
+TY BTech Computer Science and Engineering\\[1cm]
+
+\textbf{Date:}\\
+\today
+\end{flushleft}
+
+\vfill
+
+\begin{tikzpicture}[remember picture, overlay]
+\draw[line width=1.5pt]
+(current page.south west) -- (current page.south east);
+\end{tikzpicture}
+
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+% =====================================================================
+%                        GROUP 1: CSE EXPERIMENTS
+% =====================================================================
+
+\expgroup{CSE Experiments}
+
+% =====================================================================
+%                          CSE EXPERIMENT 1
+%   (Copy everything from here to "END OF EXPERIMENT" for each new one)
+% =====================================================================
+
+\section{Experiment 1: Introduction to Raspberry Pi}
+
+\subsection*{Aim}
+The aim of this experiment is to gain an understanding of the Raspberry Pi, including its features, capabilities, and applications.
+Raspberry Pi is a versatile device that allows users to learn about programming, electronics, and computer systems. 
+% ---------- PRE-TEST ----------
+\pretest{images/exp1_pretest.png}
+
+% ---------- EXPERIMENT PERFORMED (one or more screenshots) ----------
+\performed{
+  \screenshot{images/exp1_step1.png}{Rasbeerry Pi board}
+  % Add more \screenshot{...}{...} lines as needed
+}
+
+
+% \subsection*{Program Code}
+% \begin{lstlisting}[style=darkcode, language=C, caption=Program Name]
+% #include <stdio.h>
+% int main(){
+%     return 0;
+% }
+% \end{lstlisting}
+
+% ---------- POST-TEST ----------
+\posttest{images/exp1_posttest.png}
+
+\newpage
+\subsection*{Applications}
+\begin{itemize}
+    \item Home automation: Control devices like lights, fans, and appliances remotely using sensors and scripts.
+    Media centers: Turn your Raspberry Pi into a smart media hub using software like Kodi or Plex.
+    
+   \item IoT systems: Connect sensors and devices to collect and share data over the internet.
+    
+    \item Robotics: Control motors and sensors to build intelligent robots for various tasks.
+    
+    \item Web servers: Host simple websites or web apps using lightweight server software.
+    
+    \item Network monitoring: Monitor traffic, block ads (e.g., with Pi-hole), or track device activity.
+    
+    \item Educational tools: Learn programming, Linux, and basic electronics in a hands-on way.
+    
+    \item AI experiments: Run lightweight machine learning models for speech, vision, or automation tasks.
+    Basic security systems: Set up cameras, motion sensors, or facial recognition for home surveillance
+\end{itemize}
+
+\subsection*{Conclusion}
+In this experiment, we studied the Raspberry Pi using the Virtual Lab and became familiar with the Raspberry Pi 4 Model B, which is available with 2GB, 4GB or 8GB of RAM (2GB is sufficient for most educational purposes). By interacting with the components in the connection area and hovering over the GPIO pins, we learned how the board is laid out and what the different pins are used for. We also went through the software installation process needed to get the board running. The experiment gave a clear foundation in the hardware and setup of the Raspberry Pi, which we will use in later IoT experiments for interfacing sensors and building applications.
+
+\subsection*{References}
+\begin{itemize}
+\item \href{https://www.researchgate.net/publication/348993428_A_Review_Paper_on_Raspberry_Pi_and_its_Applications}{A Review Paper on Raspberry Pi and its Applications}
+\item \href{https://www.raspberrypi.org/}{Raspberry Pi – Official Website}
+\end{itemize}
+
+% ======================= END OF EXPERIMENT =========================
+\newpage
+
+% =====================================================================
+%                          CSE EXPERIMENT 2
+% =====================================================================
+
+\section{Experiment 2: Interfacing an LED with Raspberry Pi}
+
+\subsection*{Aim}
+The objective of this experiment is to interface an LED with a Raspberry Pi and develop a Python program that controls the LED's state. Specifically, the program will turn the LED ON for a duration of 1 second, followed by turning it OFF for 2 seconds, repeating this cycle indefinitely. This task will help in understanding the basic functionality of the General Purpose Input/Output (GPIO) pins on the Raspberry Pi and how to control external hardware via programming.
+
+\pretest{images/exp2_pretest.png}
+
+\performed{
+  \screenshot{images/exp2_step1.png}{LED Setup}
+  \screenshot{images/exp2_step2.png}{Python Program}
+}
+
+\posttest{images/exp2_posttest.png}
+
+\subsection*{Conclusion}
+In this experiment, we interfaced an LED with the Raspberry Pi and wrote a Python program that uses a GPIO pin to turn the LED ON for 1 second and OFF for 2 seconds, repeating indefinitely. This showed how GPIO pins can be set up as outputs to control external hardware from code. The same idea applies to status indicators, embedded systems, home automation and IoT projects.
+
+
+\section{Experiment 3: Raspberry Pi Push Button LED Blink Program}
+
+\subsection*{Aim}
+To interface a push button with a Raspberry Pi and develop a Python program to control an LED based on the button’s state. The LED turns ON when the button is pressed.
+
+\pretest{images/exp3_prettest.png}
+
+\performed{
+  \screenshot{images/exp3_step1.png}{LED Setup}
+  \screenshot{images/exp3_step2.png}{Python Program}
+}
+
+\posttest{images/exp3_posttest.png}
+
+\subsection*{Conclusion}
+In this experiment, we interfaced an LED with the Raspberry Pi and wrote a Python program that uses a GPIO pin to turn the LED ON for 1 second and OFF for 2 seconds, repeating indefinitely. This showed how GPIO pins can be set up as outputs to control external hardware from code. The same idea applies to status indicators, embedded systems, home automation and IoT projects.
+\newpage
+
+\section{Experiment 4: Interfacing an LED with Raspberry Pi}
+
+\subsection*{Aim}
+The objective of this experiment is to interface a DHT11 sensor with a Raspberry Pi and develop a Python program to read and display real-time temperature and humidity data. This experiment highlights the process of sensor integration with the Raspberry Pi using its GPIO (General-Purpose Input/Output) pins, demonstrating how embedded systems can interact with the physical environment.     
+
+\pretest{images/exp4_prettest.png}
+
+\performed{
+  \screenshot{images/exp4_step1.png}{Raspberry pi Setup}
+}
+
+\posttest{images/exp4_posttest.png}
+
+\subsection*{Conclusion}
+In this experiment, we interfaced a DHT11 sensor with the Raspberry Pi through its GPIO pins and wrote a Python program that reads and displays real-time temperature and humidity values. This showed how an embedded system can sense its physical environment. The same setup is used in weather monitoring, smart agriculture (greenhouses) and home automation.
+
+
+% ====Experiment 5
+\section{Experiment 5: To interface an Ultrasonic sensor with Raspberry Pi}
+
+\subsection*{Aim}
+The objective of this experiment is to interface an ultrasonic sensor (HC-SR04) with a Raspberry Pi and develop a Python program to measure distances with high accuracy. The experiment demonstrates how to utilize the Raspberry Pi’s General-Purpose Input/Output (GPIO) pins for real-time distance sensing using ultrasonic waves. 
+
+\pretest{images/exp5_prettest.png}
+
+\performed{
+  \screenshot{images/exp5_step1.png}{Raspberry pi Setup}
+}
+
+\posttest{images/exp5_posttest.png}
+
+\subsection*{Conclusion}
+In this experiment, we interfaced an HC-SR04 ultrasonic sensor with the Raspberry Pi through its GPIO pins and wrote a Python program that measures distance in real time using ultrasonic waves. This showed how a non-contact sensor can give accurate distance readings to an embedded system. The same setup is used in obstacle detection for robots, parking assist in vehicles, liquid level monitoring, security systems and smart home automation.
+
+%===EXperiment 6
+\section{Experiment 6: Raspberry Pi Motor Control with Relay}
+
+\subsection*{Aim}
+The aim of this experiment is to interface a DC motor with a Raspberry Pi using a relay module, enabling control of the motor’s operation through the General-Purpose Input/Output (GPIO) pins of the Raspberry Pi. This setup demonstrates the capability of the Raspberry Pi to control high-power electrical components indirectly through relays, using Python-based programming logic. The experiment also explores the safe switching of AC/DC loads using a low-power microcontroller.
+\pretest{images/exp6_prettest.png}
+
+\performed{
+  \screenshot{images/exp6_step1.png}{Raspberry pi Setup}
+  \screenshot{images/exp6_step2.png}{Python Code}
+}
+
+\posttest{images/exp6_posttest.png}
+
+\subsection*{Conclusion}
+In this experiment, we interfaced a DC motor with the Raspberry Pi using a relay module and controlled the motor through the GPIO pins with a Python program. This showed how a low-power board can safely switch high-power AC/DC loads indirectly through a relay. The same approach is used in home automation, industrial automation, smart agriculture (motorized pumps), IoT device control and robotics.
+
+%==experiment 7
+\section{Experiment 7: Raspberry Pi Bluetooth Data Transfer to Smartphone}
+
+\subsection*{Aim}
+The primary objective of this experiment is to establish wireless communication between a Raspberry Pi and a smartphone using Bluetooth technology. This involves interfacing a Bluetooth module (such as HC-05/HC-06 or using the built-in Bluetooth of Raspberry Pi) with the Raspberry Pi, configuring the necessary software and hardware settings, and implementing a program in Python to enable data transmission. The experiment demonstrates the capability of the Raspberry Pi to function as a Bluetooth server or client, thereby facilitating the exchange of data with other Bluetooth-enabled devices, particularly smartphones. This forms a foundational step in building wireless IoT systems, smart automation, and remote control applications.
+\pretest{images/exp7_prettest.png}
+
+\performed{
+  \screenshot{images/exp7_step1.png}{Raspberry pi Setup}
+}
+
+\posttest{images/exp7_posttest.png}
+
+\subsection*{Conclusion}
+In this experiment, we set up Bluetooth communication between the Raspberry Pi and a smartphone, using a Bluetooth module (HC-05/HC-06 or the Pi’s built-in Bluetooth) and a Python program to send and receive data. This showed that the Raspberry Pi can work as a Bluetooth server or client and exchange data wirelessly with other Bluetooth devices. The same setup is used in wireless data logging, home automation, healthcare monitoring and IoT prototyping.
+
+
+%=== experiment 8
+\section{Experiment 8: Raspberry Pi Pico-LED Blink Program Via Bluetooth and Smartphone}
+
+\subsection*{Aim}
+To establish Bluetooth communication between a Raspberry Pi Pico and a smartphone, enabling remote control of an LED. The system should allow the LED to turn ON upon receiving a '1' signal and turn OFF upon receiving a '0' signal from the smartphone.
+\pretest{images/exp8_prettest.png}
+
+\performed{
+  \screenshot{images/exp8_step1.png}{Raspberry pi Setup}
+}
+
+\posttest{images/exp8_posttest.png}
+
+\subsection*{Conclusion}
+In this experiment, we set up Bluetooth communication between a Raspberry Pi Pico and a smartphone to control an LED remotely: the LED turns ON when the phone sends ‘1’ and OFF when it sends ‘0’. This showed how Bluetooth, serial communication and microcontroller programming work together for wireless device control. The same idea is used in home automation, smart lighting, wireless sensor networks, medical alert systems and remote-controlled robots.
+% =====================================================================
+%                        GROUP 2: ENTC EXPERIMENTS
+% =====================================================================
+
+\expgroup{ENTC Experiments}
+
+% =====================================================================
+%   ENTC EXPERIMENTS 1-10  (paste after \expgroup{ENTC Experiments})
+%   Image names: images/entcN_pretest.png, entcN_stepK.png, entcN_posttest.png
+% =====================================================================
+
+% ---------------------------------------------------------------------
+\section{Experiment 1: Interfacing Basic Input Components with Arduino}
+
+\subsection*{Aim}
+To simulate the interfacing of basic input components (pushbutton, potentiometer, slider switch and photoresistor) with Arduino and observe how each device generates digital or analog signals. The experiment aims to understand how user actions and environmental changes are captured as inputs in an IoT system.
+
+\pretest{images/entc1_pretest1.png}
+\pretest{images/entc1_pretest2.png}
+\performed{
+  \screenshot{images/entc1_step1.png}{Intial Setup}
+  \screenshot{images/entc1_step2.png}{Sensor outputs}
+  \screenshot{images/entc1_step3.png}{Running state}
+  \screenshot{images/entc1_step4.png}{Final output}
+}
+
+\posttest{images/entc1_posttest1.png}
+\posttest{images/entc1_posttest2.png}
+\subsection*{Conclusion}
+In this experiment, we interfaced a pushbutton, potentiometer, slider switch and photoresistor with Arduino in the virtual lab. We saw that the pushbutton and slider switch give digital inputs, while the potentiometer and photoresistor give analog values that the Arduino ADC converts to a range of 0 to 1023. This shows how an Arduino reads user actions and environmental changes through its digital and analog pins.
+
+\newpage
+
+% ---------------------------------------------------------------------
+\section{Experiment 2: Interfacing Basic Output Components with Arduino}
+
+\subsection*{Aim}
+To simulate the working of commonly used output devices (RGB LED, 7-segment display, OLED, 16$\times$2 LCD and buzzer) with Arduino and analyze how a microcontroller generates visual or audio responses. The experiment also demonstrates control over color, display characters, numeric output and sound.
+
+\pretest{images/entc2_pretest1.png}
+\pretest{images/entc2_pretest2.png}
+\performed{
+  \screenshot{images/entc2_step1.png}{Interfacing RGB LED with Arduino}
+    \screenshot{images/entc2_step2.png}{Interfacing 7-segment display with Arduino}
+      \screenshot{images/entc2_step3.png}{Interfacing LCD display with Arduino}
+        \screenshot{images/entc2_step4.png}{Interfacing OLED Display with Arduino}
+        \screenshot{images/entc2_step5.png}{Interfacing Buzzer and Push Button with Arduino}
+
+}
+
+\posttest{images/entc2_posttest1.png}
+\posttest{images/entc2_posttest2.png}
+\subsection*{Conclusion}
+In this experiment, we interfaced an RGB LED, 7-segment display, OLED, 16$\times$2 LCD and buzzer with Arduino and observed their outputs in the simulation. We learned how digital pins, PWM signals and I2C communication are used to control colors, numbers, characters and sound. These output devices are the basis of user interfaces and alert systems in embedded and IoT applications.
+
+\newpage
+
+% ---------------------------------------------------------------------
+\section{Experiment 3: Interfacing Multiple Motors with Arduino}
+
+\subsection*{Aim}
+To simulate the interfacing and control of different motors (DC motor, servo motor and stepper motor) using Arduino. The objective is to understand their operating principles, including speed control, angle positioning and step-based movement, as used in robotics and automation.
+
+\pretest{images/entc3_pretest1.png}
+\pretest{images/entc3_pretest2.png}
+\performed{
+  \screenshot{images/entc3_step1.png}{Interfacing DC Motor with Arduino}
+  \screenshot{images/entc3_step2.png}{Interfacing Servo Motor with Arduino}
+  \screenshot{images/entc3_step3.png}{Interfacing Stepper Motor with Arduino}
+}
+
+\posttest{images/entc3_posttest1.png}
+\posttest{images/entc3_posttest2.png}
+\subsection*{Conclusion}
+In this experiment, we controlled a DC motor, a servo motor and a stepper motor using Arduino. We observed speed control of the DC motor using PWM, angular positioning of the servo, and step-wise rotation of the stepper motor. Because Arduino pins supply very little current, motor drivers are needed to run the motors safely.
+
+\newpage
+
+% ---------------------------------------------------------------------
+\section{Experiment 4: Interfacing Multiple Sensors with Arduino}
+
+\subsection*{Aim}
+To simulate the interfacing of multiple sensors (ultrasonic sensor, PIR sensor, DHT sensor, soil moisture sensor and MQ135 gas sensor) with Arduino. The experiment shows how physical parameters such as distance, motion, temperature, humidity, soil moisture and air quality are detected and read by a microcontroller.
+
+\pretest{images/entc4_pretest1.png}
+\pretest{images/entc4_pretest2.png}
+\performed{
+  \screenshot{images/entc4_step1.png}{Interfacing soil moisture sensor with arduino}
+\screenshot{images/entc4_step1.png}{Interfacing MQ135  sensor with arduino}
+\screenshot{images/entc4_step1.png}{Interfacing PIR Motion sensor with arduino}
+\screenshot{images/entc4_step1.png}{Interfacing Ultrasonic (HC-SR04) sensor with arduino}
+}
+
+\posttest{images/entc4_posttest1.png}
+\posttest{images/entc4_posttest2.png}
+
+\subsection*{Conclusion}
+In this experiment, we interfaced an ultrasonic sensor, PIR sensor, DHT sensor, soil moisture sensor and MQ135 sensor with Arduino and observed their readings together. We saw how digital and analog sensors are read by the Arduino at the same time. This gives a practical understanding of real-time data collection for environmental monitoring in IoT systems.
+
+\newpage
+
+% ---------------------------------------------------------------------
+\section{Experiment 5: Sending Live Sensor Data to an IoT Platform using HTTP}
+
+\subsection*{Aim}
+To simulate sending live sensor readings to a cloud platform using ESP8266/ESP32 over the HTTP protocol. The objective is to understand REST API communication, web requests and data logging for remote monitoring.
+
+\pretest{images/entc5_pretest1.png}
+\pretest{images/entc5_pretest2.png}
+\performed{
+  \screenshot{images/entc5_step1.png}{Connection between IOT devices}
+ \screenshot{images/entc5_step2.png}{Readings}
+
+}
+
+\posttest{images/entc5_posttest1.png}
+\posttest{images/entc5_posttest2.png}
+\subsection*{Conclusion}
+In this experiment, we used an ESP32 with a DHT sensor to read temperature and humidity and send them to a web server using HTTP GET/POST requests. We saw the live values update on the web dashboard and learned how Wi-Fi connection, HTTP requests and server responses work together. This shows how HTTP can be used to push sensor data to a cloud platform for remote monitoring.
+
+\newpage
+
+% ---------------------------------------------------------------------
+\section{Experiment 6: Sending Live Sensor Data to an IoT Platform using MQTT}
+
+\subsection*{Aim}
+To simulate lightweight IoT communication using MQTT, where ESP8266/ESP32 publishes sensor data to topics through a broker. The experiment aims to understand broker-based messaging and its advantages in real-time IoT systems.
+
+\pretest{images/entc6_pretest1.png}
+\pretest{images/entc6_pretest2.png}
+\performed{
+  \screenshot{images/entc6_step1.png}{MQTT broker Dashboard}
+  \screenshot{images/entc6_step2.png}{Statistics}
+}
+
+\posttest{images/entc6_posttest1.png}
+\posttest{images/entc6_posttest2.png}
+\subsection*{Conclusion}
+In this experiment, we used an ESP32 with a DHT sensor to publish temperature and humidity values to an MQTT topic and watched them update live on the MQTT dashboard. We learned how the publish--subscribe model, the broker and topics work. MQTT is lightweight and reliable, which makes it well suited to low-power IoT devices with limited bandwidth.
+
+\newpage
+
+% ---------------------------------------------------------------------
+\section{Experiment 7: Master--Slave Model using Arduino and I2C}
+
+\subsection*{Aim}
+To simulate communication between multiple Arduino boards using the I2C protocol in a master--slave architecture. The experiment helps in understanding synchronized data transfer and multi-device control in embedded systems.
+
+\pretest{images/entc7_pretest1.png}
+
+\pretest{images/entc7_pretest2.png}
+
+\performed{
+  \screenshot{images/entc7_step1.png}{Simulation of master slave Model using arduino and I2C protocols}
+}
+
+\posttest{images/entc7_posttest1.png}
+\posttest{images/entc7_posttest2.png}
+\subsection*{Conclusion}
+In this experiment, we connected two Arduino boards over the I2C bus (SDA and SCL) as master and slave. Pressing the pushbutton on the master sent a command over I2C, and the slave turned its LED ON or OFF accordingly. This showed how I2C lets one master control slave devices using just two wires and unique addresses.
+
+\newpage
+
+% ---------------------------------------------------------------------
+\section{Experiment 8: Interrelation between Cloud Platforms and ESP8266/ESP32}
+
+\subsection*{Aim}
+To simulate and understand the interrelation between IoT cloud platforms (AWS, Microsoft Azure, ThingSpeak and IBM Bluemix) and ESP8266/ESP32 microcontrollers. The experiment shows how an ESP device sends sensor data to the cloud for storage, processing and visualization.
+
+\pretest{images/entc8_pretest1.png}
+\pretest{images/entc8_pretest2.png}
+\performed{
+  \screenshot{images/entc8_step1.png}{Think Cloud Dashboard}
+}
+
+\posttest{images/entc8_posttest1.png}
+\posttest{images/entc8_posttest2.png}
+
+\subsection*{Conclusion}
+In this experiment, we used an ESP32 with a DHT22 sensor to upload temperature and humidity readings to a ThingSpeak channel using an HTTP request and API key. We saw the live graphs update on the ThingSpeak dashboard. This shows how cloud platforms turn a local sensor node into a scalable, remotely accessible IoT system.
+
+\newpage
+
+% ---------------------------------------------------------------------
+\section{Experiment 9: IoT Dashboard for Remote Monitoring}
+
+\subsection*{Aim}
+To design and simulate an IoT dashboard that visualizes live sensor data in real time. The experiment aims to understand dashboard elements such as widgets, charts and APIs, and how they support remote monitoring through cloud or web interfaces.
+
+\pretest{images/entc9_pretest1.png}
+\pretest{images/entc9_pretest2.png}
+
+\performed{
+  \screenshot{images/entc9_step1.png}{IOT dashboard}
+  \screenshot{images/entc9_step2.png}{Graphs}
+}
+
+\posttest{images/entc9_posttest1.png}
+\posttest{images/entc9_posttest2.png}
+\subsection*{Conclusion}
+In this experiment, we studied an IoT dashboard with charts, gauges and indicators that updated continuously with simulated sensor data. We learned how sensor data flows through the cloud and APIs to the widgets and charts the user sees. Dashboards give real-time visibility and help in decision making, which is useful in smart agriculture, smart homes and industrial monitoring.
+
+\newpage
+
+% ---------------------------------------------------------------------
+\section{Experiment 10: IoT Application using LoRaWAN and ESP8266/ESP32}
+
+\subsection*{Aim}
+Simulate long-range low-power communication using LoRaWAN with ESP8266/ESP32 for IoT applications. The objective is to understand gateway communication, device registration and LPWAN-based data transmission.
+
+\pretest{images/entc10_pretest1.png}
+\pretest{images/entc10_pretest2.png}
+
+\performed{
+  \screenshot{images/entc10_step1.png}{IOT Dashboard}
+  \screenshot{images/entc10_step2.png}{Transmission logs}
+  
+}
+
+\posttest{images/entc10_posttest.png}
+
+\subsection*{Conclusion}
+In this experiment, we activated a virtual LoRaWAN device, which joined the network and sent simulated sensor packets that updated the dashboard charts. We learned how end nodes, gateways, network servers and application servers work together in a LoRaWAN system. LoRaWAN gives long-range, low-power and secure communication, which suits applications like environmental monitoring and asset tracking.
+
+\newpage
+\end{document}
