@@ -11,6 +11,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
+\usepackage{titletoc}
 
 % ================= CODE THEME =================
 \definecolor{codebg}{RGB}{30,30,30}
@@ -35,6 +36,19 @@
 \setlength{\parindent}{0pt}
 \titleformat{\section}{\Large\bfseries}{}{0em}{}   % experiment headings
 \titleformat{\subsection}{\large\bfseries}{}{0em}{}
+
+% ===== Table of Content =====
+\titlecontents{part}[0pt]
+  {\addvspace{12pt}\bfseries\large}
+  {}{}
+  {\hfill\contentspage}
+
+\titlecontents{section}[1.5em]
+  {\addvspace{4pt}}
+  {}{}
+  {\titlerule*[0.5pc]{.}\contentspage}
+  \setlength{\cftsecnumwidth}{2em}
+\renewcommand{\cftsecaftersnum}{.}   % prints "1." before each title
 
 % ================= HEADER / FOOTER =================
 % Left of header  : current group  (CSE Experiments / ENTC Experiments)
@@ -144,10 +158,10 @@ TY BTech Computer Science and Engineering\\[1cm]
 
 \end{titlepage}
 
+%Table of contents
 \newpage
 \tableofcontents
 \newpage
-
 % =====================================================================
 %                        GROUP 1: CSE EXPERIMENTS
 % =====================================================================
