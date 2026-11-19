@@ -1,0 +1,79 @@
+Internet of Things: Syllabus
+Unit 1: Internet of Things Concepts & Architectures (4 Hrs)
+
+Topics
+
+Introduction to IoT: definition, evolution, and real-world applications
+IoT architecture models: 3-layer, 5-layer, and cloud-centric
+Core components: sensors, actuators, embedded systems
+Data flow in IoT systems: Device → Gateway → Cloud → User
+IoT platforms and middleware
+Shift from cloud to edge/fog computing: limitations of cloud-only models
+
+Self Study: Latency, bandwidth, and privacy concerns
+
+Unit 2: Introduction to Edge Computing Architectures (4 Hrs)
+
+Topics
+
+Edge computing fundamentals
+Edge vs. fog vs. cloud computing
+Edge nodes and edge data centers
+Real-time processing requirements
+Round Trip Time (RTT) and latency optimization
+Edge AI basics
+
+Self Study: Case study on resource-constrained computing
+
+Unit 3: Networking for IoT and Data-Driven Systems (4 Hrs)
+
+Topics
+
+IoT communication models: request-response, publish-subscribe
+Protocols: MQTT, CoAP, HTTP, AMQP
+Wireless technologies: Zigbee, LoRaWAN, NB-IoT, Bluetooth Low Energy
+Network topologies: star, mesh, hybrid
+IPv6 and 6LoWPAN
+Data aggregation and gateways
+
+Self Study: Case study development with LoRaWAN
+
+Unit 4: 5G and Beyond: IoT Connectivity (5 Hrs)
+
+Topics
+
+- Introduction to 5G architecture 
+- Key features: eMBB, URLLC, mMTC
+Network slicing in 5G
+Edge computing integration with 5G
+Beyond 5G (B5G) and 6G concepts
+IoT in autonomous vehicles and smart defence systems
+
+Self Study: Mobile Edge Computing (MEC) in beyond-5G and 6G communication
+
+Unit 5: Integration of ML & Data Science in IoT and Networks (5 Hrs)
+
+Topics
+
+Data lifecycle in IoT
+Data preprocessing and feature engineering
+ML models: regression, classification, clustering
+Edge AI vs. cloud AI
+Real-time analytics
+Predictive maintenance models
+
+Self Study: Examples with TinyML and embedded AI
+
+Unit 6: IoT Security using ML and Deep Learning (6 Hrs)
+
+Topics
+
+IoT security challenges: device vulnerabilities, data breaches
+Cryptography basics: symmetric and asymmetric encryption
+Authentication and access control
+Blockchain for IoT security (introduction)
+ML-based security: anomaly detection
+Intrusion Detection Systems (IDS)
+Deep learning in cybersecurity
+
+Self Study: Case study on secure edge computing
